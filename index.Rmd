@@ -106,3 +106,38 @@ ggplot(data = corruption) +
 ```
 
 ![xiangting ssh screencut](ssh.jpg)
+
+## Corrupt Officials and GDP
+GDP is strongly correlated with corruption. In the provinces with lower GDP, the proportion of corrupt officials among all non-private employees is higher. As central, west and northeast parts of China is not as wealthy as east rejion, the proportion of corrupt officials is higher in those three regions.
+
+[Data Source](https://data.stats.gov.cn/index.htm)
+
+```{r}
+corruption <- corruption %>%
+mutate(corruption_per = corruption_officials / non_private_employee)
+ggplot(data = corruption, mapping = aes(x = provincial_GDP, y = corruption_per,shape = region, alpha = 0.4)) +
+  geom_point() +
+  geom_hline(yintercept = 2.7645, color = "orange", size = 1) +
+  geom_vline(xintercept = 14243, color = "orange", size = 1)
+```
+
+## Corrupt Officials and Provincial Expenditure
+The grapgh aims at exploring the correlation between the amount of the officials convicted of corruption and the provincial expenditure in each province in 2017. We can see clearly that the higher the provincial expenditure is, the more corrupt officials are in the province in general. Officials are easily tempted by the large sum of money at every stage of government's budget.There exists positive correlation between such two variables. 
+
+[Data Source](https://data.stats.gov.cn/index.htm)
+
+```{r}
+corruption %>% 
+  filter(year == "2017") %>%
+  group_by(province) %>%
+  ggplot(mapping = aes(x = provincial_expenditure, 
+                         y = reorder(province, provincial_expenditure),
+                         fill = corruption_officials)) +
+  geom_bar(stat = "identity")  +
+  scale_fill_continuous(name = "provincial_ expenditure") +
+  labs(title ="Correlation between Corruption Officials and Provincial Expenditure",
+         x = "Provincial Expenditure",
+       y = "Province")
+  
+```
+![Tianjiao Gao ssh](ssh.jpg)
