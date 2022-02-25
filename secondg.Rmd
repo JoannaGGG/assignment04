@@ -1,0 +1,83 @@
+---
+title: "second plot"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+
+
+```{r include =  FALSE}
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+corruption <- read_excel("corruption.xlsx")
+```
+
+## Different period of government and Local corruption
+
+This plot explore how degree of corruption in different economic zones varied in different period of Chinese government. The Chinese Communist Party (CCP) uses 5 years as cycle to institute national plans and policies. The plot indicates that in different period of 5 years plan the degree of corruption in East, West and Central have gradual decrease due to the reform of Chinese anti-corruption system. But Northeast appears to be an outlier. 
+
+This finding implies that Chinese government should pay more attention to the anti-corruption issues in Northeast economic zone. 
+
+[Data Source](https://data.stats.gov.cn/index.htm)
+
+```{r  echo = TRUE}
+corruption <- corruption %>%
+  mutate(
+    period = case_when(
+      year == 2003 ~ "16th",
+      year == 2004 ~ "16th",
+      year == 2005 ~ "16th",
+      year == 2006 ~ "16th",
+      year == 2007 ~ "16th",
+      year == 2008 ~ "17th",
+      year == 2009 ~ "17th",
+      year == 2010 ~ "17th",
+      year == 2011 ~ "17th",
+      year == 2012 ~ "17th",
+      year == 2013 ~ "18th",
+      year == 2014 ~ "18th",
+      year == 2015 ~ "18th",
+      year == 2016 ~ "18th",
+      year == 2017 ~ "18th"
+    ))
+period_level <- c("16th","17th","18th")
+corruption$period <- factor(corruption$period, 
+                            levels = period_level)
+region_level <- c("East", "Northeast", "Central", "West")
+corruption$region <- factor(corruption$region, 
+                            levels = region_level)
+ggplot(data = corruption) +
+  geom_boxplot(mapping = aes(x = period,
+                             y = corruption_per,
+                             fill = region,
+                             color = region,
+                             outlier.size = 2,
+                             outlier.alpha = 0.4),
+               width = 0.5,
+               alpha = 0.4) +
+  scale_fill_manual(values = c("East" = "blue",
+                               "Northeast" = "red",
+                               "West" = "orange",
+                               "Central" = "purple")) +
+  scale_color_manual(values = c("East" = "blue",
+                               "Northeast" = "red",
+                               "West" = "orange",
+                               "Central" = "purple")) +
+  coord_cartesian(ylim = c(0, 8)) +
+  theme(legend.title=element_blank()) +
+  labs(title = "Corruption Cases per 10,000 Non-private Employees on CCP National COngresses, by Economic Zone",
+       caption = "Data Source: National Bureau of Statistics of China",
+       x = "CCP National Congress",
+       y = "Provincial Annual Corruption Cases per 10,000 Non-private employees")
+```
+
+
+
+
+
