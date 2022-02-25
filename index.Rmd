@@ -104,3 +104,5 @@ ggplot(data = corruption) +
        x = "CCP National Congress",
        y = "Provincial Annual Corruption Cases per 10,000 Non-private employees")
 ```
+
+![xiangting ssh screencut](ssh.jpg)
