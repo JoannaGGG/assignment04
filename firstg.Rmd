@@ -1,0 +1,47 @@
+---
+title: "assignemnt04 first graph"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+
+
+```{r include =  FALSE}
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+corruption <- read_excel("corruption.xlsx")
+```
+
+## Internet Penetration Rate and Local corruption
+
+This plot explore the negative relationship between provincial internet penetration rate and degree of local corruption in different economic zones of China. As the development of E-government in recent years facilitates citizens to supervise government daily operation, provinces with higher internet penetration rate appear to have fewer corruption cases.
+
+This finding implies that better infrastructures can empower citizens to monitor local governments as news media, reshaping the system of anti-corruption institutions. 
+
+[Data Source](https://data.stats.gov.cn/index.htm)
+[Relevant Academic Work](https://www.sciencedirect.com/science/article/abs/pii/S0167624509000110)
+ 
+```{r  echo = TRUE}
+corruption <- corruption %>%
+mutate(corruption_per = corruption_officials / non_private_employee)
+ggplot(data = corruption,
+        mapping = aes(x = corruption_per,
+                      y = internet)) +
+    geom_point(alpha = 0.2 , color= "blue", position = "jitter") +
+    geom_smooth(method="lm", color = "red", linetype = 2, se= FALSE) +
+  facet_grid(~region) +  
+  coord_cartesian(ylim = c(0, 1)) +
+  coord_cartesian(xlim = c(0, 10)) +
+  labs(title = "Internet Penetration Rate on Corruption Cases per 10,000 Non-private Employees, by Economic Zone",
+       caption = "Data Source: National Bureau of Statistics of China",
+       x = "Provincial Annual Corruption Cases per 10,000 Non-private employees",
+       y = "Provincial Annual Internet Penetration Rate") +
+  theme(strip.background = element_blank(),
+        legend.title=element_blank())
+```
